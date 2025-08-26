@@ -440,7 +440,8 @@ protected:
   inline void raytraceLine(
     ActionType at, unsigned int x0, unsigned int y0, unsigned int x1,
     unsigned int y1,
-    unsigned int max_length = UINT_MAX, unsigned int min_length = 0)
+    unsigned int max_length = UINT_MAX, unsigned int min_length = 0,
+    bool include_endpoint=true)
   {
     int dx_full = x1 - x0;
     int dy_full = y1 - y0;
@@ -480,7 +481,7 @@ protected:
       int error_y = abs_dx / 2;
 
       bresenham2D(
-        at, abs_dx, abs_dy, error_y, offset_dx, offset_dy, offset, (unsigned int)(scale * abs_dx));
+        at, abs_dx, abs_dy, error_y, offset_dx, offset_dy, offset, (unsigned int)(scale * abs_dx), include_endpoint);
       return;
     }
 
@@ -488,7 +489,7 @@ protected:
     int error_x = abs_dy / 2;
 
     bresenham2D(
-      at, abs_dy, abs_dx, error_x, offset_dy, offset_dx, offset, (unsigned int)(scale * abs_dy));
+      at, abs_dy, abs_dx, error_x, offset_dy, offset_dx, offset, (unsigned int)(scale * abs_dy), include_endpoint);
   }
 
 private:
@@ -501,7 +502,8 @@ private:
     ActionType at, unsigned int abs_da, unsigned int abs_db, int error_b,
     int offset_a,
     int offset_b, unsigned int offset,
-    unsigned int max_length)
+    unsigned int max_length,
+    bool include_endpoint=true)
   {
     unsigned int end = std::min(max_length, abs_da);
     for (unsigned int i = 0; i < end; ++i) {
@@ -513,7 +515,9 @@ private:
         error_b -= abs_da;
       }
     }
-    at(offset);
+    if (include_endpoint) {
+      at(offset);
+    }
   }
 
   /**
