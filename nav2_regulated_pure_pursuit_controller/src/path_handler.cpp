@@ -18,6 +18,7 @@
 #include <memory>
 #include <vector>
 #include <utility>
+#include <Eigen/Geometry>
 
 #include "nav2_regulated_pure_pursuit_controller/path_handler.hpp"
 #include "nav2_core/controller_exceptions.hpp"
@@ -68,15 +69,44 @@ nav_msgs::msg::Path PathHandler::transformGlobalPlan(
     nav2_util::geometry_utils::first_after_integrated_distance(
     global_plan_.poses.begin(), global_plan_.poses.end(), max_robot_pose_search_dist);
 
-  // First find the closest pose on the path to the robot
-  // bounded by when the path turns around (if it does) so we don't get a pose from a later
-  // portion of the path
-  auto transformation_begin =
-    nav2_util::geometry_utils::min_by(
-    global_plan_.poses.begin(), closest_pose_upper_bound,
-    [&robot_pose](const geometry_msgs::msg::PoseStamped & ps) {
-      return euclidean_distance(robot_pose, ps);
-    });
+  double prev_dist = std::numeric_limits<double>::max();
+  std::size_t pose_index = 0;
+  while (pose_index < global_plan_.poses.size()) {
+    const auto &point = global_plan_.poses[pose_index];
+    double dist =
+        std::hypot(robot_pose.pose.position.x - point.pose.position.x,
+                   robot_pose.pose.position.y - point.pose.position.y);
+    // std::cout << pose_index << "/" << global_plan_.poses.size() << ": " << dist << std::endl;
+    if (pose_index > 0 && dist > prev_dist && pose_index >= prev_pose_index_) {
+      pose_index--;
+      break;
+    }
+    if (global_plan_.poses.begin() + pose_index == closest_pose_upper_bound) {
+      break;
+    }
+    prev_dist = dist;
+    pose_index++;
+  }
+
+  if (prev_pose_index_ + 1 != pose_index) {
+    prev_pose_index_ = pose_index;
+  } else {
+    const auto &a_point = global_plan_.poses[prev_pose_index_].pose.position;
+    Eigen::Vector3d a(a_point.x, a_point.y, a_point.z);
+
+    const auto &b_point = global_plan_.poses[pose_index].pose.position;
+    Eigen::Vector3d b(b_point.x, b_point.y, b_point.z);
+
+    const auto& x_point = robot_pose.pose.position;
+    Eigen::Vector3d x(x_point.x, x_point.y, x_point.z);
+
+    double proportion = (b - a).dot(x - a) / (b - a).squaredNorm();;
+    // TODO: Configurable
+    if (proportion >= 1.0) {
+      prev_pose_index_ = pose_index;
+    }
+  }
+  auto transformation_begin = global_plan_.poses.begin() + prev_pose_index_;
 
   // Make sure we always have at least 2 points on the transformed plan and that we don't prune
   // the global plan below 2 points in order to have always enough point to interpolate the

@@ -77,7 +77,10 @@ public:
     const geometry_msgs::msg::PoseStamped & in_pose,
     geometry_msgs::msg::PoseStamped & out_pose) const;
 
-  void setPlan(const nav_msgs::msg::Path & path) {global_plan_ = path;}
+  void setPlan(const nav_msgs::msg::Path & path) {
+    global_plan_ = path;
+    prev_pose_index_ = 0;
+  }
 
   nav_msgs::msg::Path getPlan() {return global_plan_;}
 
@@ -93,6 +96,7 @@ protected:
   std::shared_ptr<tf2_ros::Buffer> tf_;
   std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
   nav_msgs::msg::Path global_plan_;
+  std::size_t prev_pose_index_;
 };
 
 }  // namespace nav2_regulated_pure_pursuit_controller
