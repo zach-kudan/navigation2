@@ -54,3 +54,5 @@ cmake-build-debug/
 
 # doxygen docs
 doc/html/
+
+COLCON_IGNORE
