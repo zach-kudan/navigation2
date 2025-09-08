@@ -115,8 +115,11 @@ void SmacPlannerHybrid::configure(
     node, name + ".reverse_penalty", rclcpp::ParameterValue(2.0));
   node->get_parameter(name + ".reverse_penalty", _search_info.reverse_penalty);
   nav2_util::declare_parameter_if_not_declared(
-    node, name + ".change_penalty", rclcpp::ParameterValue(0.0));
-  node->get_parameter(name + ".change_penalty", _search_info.change_penalty);
+    node, name + ".forward_reverse_change_penalty", rclcpp::ParameterValue(0.0));
+  node->get_parameter(name + ".forward_reverse_change_penalty", _search_info.forward_reverse_change_penalty);
+  nav2_util::declare_parameter_if_not_declared(
+    node, name + ".left_right_change_penalty", rclcpp::ParameterValue(0.0));
+  node->get_parameter(name + ".left_right_change_penalty", _search_info.left_right_change_penalty);
   nav2_util::declare_parameter_if_not_declared(
     node, name + ".non_straight_penalty", rclcpp::ParameterValue(1.2));
   node->get_parameter(name + ".non_straight_penalty", _search_info.non_straight_penalty);
@@ -612,9 +615,12 @@ SmacPlannerHybrid::dynamicParametersCallback(std::vector<rclcpp::Parameter> para
       } else if (name == _name + ".reverse_penalty") {
         reinit_a_star = true;
         _search_info.reverse_penalty = static_cast<float>(parameter.as_double());
-      } else if (name == _name + ".change_penalty") {
+      } else if (name == _name + ".forward_reverse_change_penalty") {
         reinit_a_star = true;
-        _search_info.change_penalty = static_cast<float>(parameter.as_double());
+        _search_info.forward_reverse_change_penalty = static_cast<float>(parameter.as_double());
+      } else if (name == _name + ".left_right_change_penalty") {
+        reinit_a_star = true;
+        _search_info.left_right_change_penalty = static_cast<float>(parameter.as_double());
       } else if (name == _name + ".non_straight_penalty") {
         reinit_a_star = true;
         _search_info.non_straight_penalty = static_cast<float>(parameter.as_double());

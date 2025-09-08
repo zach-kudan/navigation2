@@ -126,7 +126,8 @@ struct HybridMotionTable
   float num_angle_quantization_float;
   float min_turning_radius;
   float bin_size;
-  float change_penalty;
+  float forward_reverse_change_penalty;
+  float left_right_change_penalty;
   float non_straight_penalty;
   float cost_penalty;
   float reverse_penalty;

@@ -56,7 +56,7 @@ void LatticeMotionTable::initMotionModel(
   }
 
   size_x = size_x_in;
-  change_penalty = search_info.change_penalty;
+  change_penalty = search_info.left_right_change_penalty;
   non_straight_penalty = search_info.non_straight_penalty;
   cost_penalty = search_info.cost_penalty;
   reverse_penalty = search_info.reverse_penalty;

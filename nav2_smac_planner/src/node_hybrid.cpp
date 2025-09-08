@@ -60,7 +60,8 @@ void HybridMotionTable::initDubin(
   SearchInfo & search_info)
 {
   size_x = size_x_in;
-  change_penalty = search_info.change_penalty;
+  forward_reverse_change_penalty = search_info.forward_reverse_change_penalty;
+  left_right_change_penalty = search_info.left_right_change_penalty;
   non_straight_penalty = search_info.non_straight_penalty;
   cost_penalty = search_info.cost_penalty;
   reverse_penalty = search_info.reverse_penalty;
@@ -187,7 +188,8 @@ void HybridMotionTable::initReedsShepp(
   SearchInfo & search_info)
 {
   size_x = size_x_in;
-  change_penalty = search_info.change_penalty;
+  forward_reverse_change_penalty = search_info.forward_reverse_change_penalty;
+  left_right_change_penalty = search_info.left_right_change_penalty;
   non_straight_penalty = search_info.non_straight_penalty;
   cost_penalty = search_info.cost_penalty;
   reverse_penalty = search_info.reverse_penalty;
@@ -415,17 +417,22 @@ float NodeHybrid::getTraversalCost(const NodePtr & child)
       (motion_table.travel_distance_reward + motion_table.cost_penalty * normalized_cost);
   }
 
-  if (child_turn_dir == TurnDirection::FORWARD || child_turn_dir == TurnDirection::REVERSE) {
-    // New motion is a straight motion, no additional costs to be applied
-    travel_cost = travel_cost_raw;
-  } else {
-    if (getTurnDirection() == child_turn_dir) {
-      // Turning motion but keeps in same direction: encourages to commit to turning if starting it
-      travel_cost = travel_cost_raw * motion_table.non_straight_penalty;
-    } else {
-      // Turning motion and changing direction: penalizes wiggling
-      travel_cost = travel_cost_raw *
-        (motion_table.non_straight_penalty + motion_table.change_penalty);
+  travel_cost = travel_cost_raw;
+
+  if (child_turn_dir != TurnDirection::FORWARD && child_turn_dir != TurnDirection::REVERSE) {
+    // New motion is a curved motion
+    travel_cost += travel_cost_raw * motion_table.non_straight_penalty;
+    if (getTurnDirection() != child_turn_dir) {
+      // Changes direction: penalize wiggling
+      travel_cost += travel_cost_raw * motion_table.left_right_change_penalty;
+    }
+  }
+
+  {
+    bool is_forward = (int)getTurnDirection() <= (int)TurnDirection::RIGHT;
+    bool child_forward = (int)child_turn_dir <= (int)TurnDirection::RIGHT;
+    if (is_forward != child_forward) {
+      travel_cost += travel_cost_raw * motion_table.forward_reverse_change_penalty;
     }
   }
 
@@ -434,7 +441,7 @@ float NodeHybrid::getTraversalCost(const NodePtr & child)
     child_turn_dir == TurnDirection::REVERSE)
   {
     // reverse direction
-    travel_cost *= motion_table.reverse_penalty;
+    travel_cost += travel_cost_raw * motion_table.reverse_penalty;
   }
 
   return travel_cost;
