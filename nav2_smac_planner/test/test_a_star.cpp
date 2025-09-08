@@ -145,7 +145,8 @@ TEST(AStarTest, test_a_star_se2)
 {
   auto lnode = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.1;
+  info.left_right_change_penalty = 0.1;
+  info.forward_reverse_change_penalty = 0.0;
   info.non_straight_penalty = 1.1;
   info.reverse_penalty = 2.0;
   info.minimum_turning_radius = 8;  // in grid coordinates
@@ -222,7 +223,8 @@ TEST(AStarTest, test_a_star_analytic_expansion)
 {
   auto lnode = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.0;
+  info.left_right_change_penalty = 0.0;
+  info.forward_reverse_change_penalty = 0.0;
   info.non_straight_penalty = 1.1;
   info.reverse_penalty = 0.0;
   info.minimum_turning_radius = 8;  // in grid coordinates
@@ -284,7 +286,8 @@ TEST(AStarTest, test_a_star_lattice)
 {
   auto lnode = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.05;
+  info.forward_reverse_change_penalty = 0.05;
+  info.left_right_change_penalty = 0.05;
   info.non_straight_penalty = 1.05;
   info.reverse_penalty = 2.0;
   info.retrospective_penalty = 0.1;
@@ -360,7 +363,8 @@ TEST(AStarTest, test_se2_single_pose_path)
 {
   auto lnode = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.1;
+  info.forward_reverse_change_penalty = 0.1;
+  info.left_right_change_penalty = 0.1;
   info.non_straight_penalty = 1.1;
   info.reverse_penalty = 2.0;
   info.retrospective_penalty = 0.0;

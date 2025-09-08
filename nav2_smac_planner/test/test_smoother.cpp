@@ -75,7 +75,8 @@ TEST(SmootherTest, test_full_smoother)
 
   // Setup A* search to get path to smooth
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.05;
+  info.left_right_change_penalty = 0.05;
+  info.forward_reverse_change_penalty = 0.0;
   info.non_straight_penalty = 1.05;
   info.reverse_penalty = 2.0;
   info.cost_penalty = 2.0;

@@ -39,7 +39,8 @@ TEST(NodeHybridTest, test_node_hybrid)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.1;
+  info.forward_reverse_change_penalty = 0.1;
+  info.left_right_change_penalty = 0.1;
   info.non_straight_penalty = 1.1;
   info.reverse_penalty = 2.0;
   info.minimum_turning_radius = 8;  // 0.4m/5cm resolution costmap
@@ -153,7 +154,8 @@ TEST(NodeHybridTest, test_obstacle_heuristic)
 {
   auto node = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 0.1;
+  info.forward_reverse_change_penalty = 0.1;
+  info.left_right_change_penalty = 0.1;
   info.non_straight_penalty = 1.1;
   info.reverse_penalty = 2.0;
   info.minimum_turning_radius = 8;  // 0.4m/5cm resolution costmap
@@ -242,7 +244,8 @@ TEST(NodeHybridTest, test_obstacle_heuristic)
 TEST(NodeHybridTest, test_node_debin_neighbors)
 {
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 1.2;
+  info.forward_reverse_change_penalty = 1.2;
+  info.left_right_change_penalty = 1.2;
   info.non_straight_penalty = 1.4;
   info.reverse_penalty = 2.1;
   info.minimum_turning_radius = 4;  // 0.2 in grid coordinates
@@ -275,7 +278,8 @@ TEST(NodeHybridTest, test_interpolation_prims)
   unsigned int size_theta = 64;
 
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 1.2;
+  info.forward_reverse_change_penalty = 1.2;
+  info.left_right_change_penalty = 1.2;
   info.non_straight_penalty = 1.4;
   info.reverse_penalty = 2.1;
   info.minimum_turning_radius = 8;  // 0.4 in grid coordinates
@@ -296,7 +300,8 @@ TEST(NodeHybridTest, test_interpolation_prims2)
   unsigned int size_theta = 72;
 
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 1.2;
+  info.forward_reverse_change_penalty = 1.2;
+  info.left_right_change_penalty = 1.2;
   info.non_straight_penalty = 1.4;
   info.reverse_penalty = 2.1;
   info.minimum_turning_radius = 8;  // 0.4 in grid coordinates
@@ -314,7 +319,8 @@ TEST(NodeHybridTest, test_node_reeds_neighbors)
 {
   auto lnode = std::make_shared<rclcpp_lifecycle::LifecycleNode>("test");
   nav2_smac_planner::SearchInfo info;
-  info.change_penalty = 1.2;
+  info.forward_reverse_change_penalty = 1.2;
+  info.left_right_change_penalty = 1.2;
   info.non_straight_penalty = 1.4;
   info.reverse_penalty = 2.1;
   info.minimum_turning_radius = 8;  // 0.4 in grid coordinates

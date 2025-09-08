@@ -103,7 +103,8 @@ TEST(NodeLatticeTest, test_node_lattice_neighbors_and_parsing)
   nav2_smac_planner::SearchInfo info;
   info.minimum_turning_radius = 1.1;
   info.non_straight_penalty = 1;
-  info.change_penalty = 1;
+  info.forward_reverse_change_penalty = 1;
+  info.left_right_change_penalty = 1;
   info.reverse_penalty = 1;
   info.cost_penalty = 1;
   info.retrospective_penalty = 0.0;
@@ -149,7 +150,8 @@ TEST(NodeLatticeTest, test_node_lattice_conversions)
   nav2_smac_planner::SearchInfo info;
   info.minimum_turning_radius = 1.1;
   info.non_straight_penalty = 1;
-  info.change_penalty = 1;
+  info.forward_reverse_change_penalty = 1;
+  info.left_right_change_penalty = 1;
   info.reverse_penalty = 1;
   info.cost_penalty = 1;
   info.retrospective_penalty = 0.0;
@@ -188,7 +190,8 @@ TEST(NodeLatticeTest, test_node_lattice)
   nav2_smac_planner::SearchInfo info;
   info.minimum_turning_radius = 1.1;
   info.non_straight_penalty = 1;
-  info.change_penalty = 1;
+  info.forward_reverse_change_penalty = 1;
+  info.left_right_change_penalty = 1;
   info.reverse_penalty = 1;
   info.cost_penalty = 1;
   info.retrospective_penalty = 0.1;
@@ -272,7 +275,8 @@ TEST(NodeLatticeTest, test_get_neighbors)
   nav2_smac_planner::SearchInfo info;
   info.minimum_turning_radius = 1.1;
   info.non_straight_penalty = 1;
-  info.change_penalty = 1;
+  info.forward_reverse_change_penalty = 1;
+  info.left_right_change_penalty = 1;
   info.reverse_penalty = 1;
   info.cost_penalty = 1;
   info.analytic_expansion_ratio = 1;
@@ -332,7 +336,8 @@ TEST(NodeLatticeTest, test_node_lattice_custom_footprint)
   nav2_smac_planner::SearchInfo info;
   info.minimum_turning_radius = 0.5;
   info.non_straight_penalty = 1;
-  info.change_penalty = 1;
+  info.forward_reverse_change_penalty = 1;
+  info.left_right_change_penalty = 1;
   info.reverse_penalty = 1;
   info.cost_penalty = 1;
   info.retrospective_penalty = 0.1;
