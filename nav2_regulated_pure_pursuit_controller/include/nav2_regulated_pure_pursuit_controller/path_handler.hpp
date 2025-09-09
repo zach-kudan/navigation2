@@ -63,7 +63,9 @@ public:
    */
   nav_msgs::msg::Path transformGlobalPlan(
     const geometry_msgs::msg::PoseStamped & pose,
-    double max_robot_pose_search_dist, bool reject_unit_path = false);
+    double max_robot_pose_search_dist,
+    double segment_switch_proportion = 1.0,
+    bool reject_unit_path = false);
 
   /**
    * @brief Transform a pose to another frame.

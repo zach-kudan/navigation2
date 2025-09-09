@@ -183,7 +183,10 @@ geometry_msgs::msg::TwistStamped RegulatedPurePursuitController::computeVelocity
 
   // Transform path to robot base frame
   auto transformed_plan = path_handler_->transformGlobalPlan(
-    pose, params_->max_robot_pose_search_dist, params_->interpolate_curvature_after_goal);
+    pose,
+    params_->max_robot_pose_search_dist,
+    params_->segment_switch_proportion,
+    params_->interpolate_curvature_after_goal);
   global_path_pub_->publish(transformed_plan);
 
   // Find look ahead distance and point on path and publish
@@ -234,13 +237,8 @@ geometry_msgs::msg::TwistStamped RegulatedPurePursuitController::computeVelocity
   const double dist_to_carrot_pose =
       std::hypot(carrot_pose.pose.position.x, carrot_pose.pose.position.y);
 
-  // TODO: Configurable
-  const double slow_down_dist = 0.5;
-  const double min_speed = 0.3;
-
-  if (dist_to_carrot_pose < slow_down_dist) {
-    linear_vel *= dist_to_carrot_pose / slow_down_dist;
-    linear_vel = std::max(linear_vel, min_speed);
+  if (dist_to_carrot_pose < params_->slow_down_distance) {
+    linear_vel *= std::max(dist_to_carrot_pose / params_->slow_down_distance, params_->slow_down_min_proportion);
   }
 
   // Make sure we're in compliance with basic constraints

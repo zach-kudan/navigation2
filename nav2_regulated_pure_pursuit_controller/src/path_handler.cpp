@@ -49,6 +49,7 @@ double PathHandler::getCostmapMaxExtent() const
 nav_msgs::msg::Path PathHandler::transformGlobalPlan(
   const geometry_msgs::msg::PoseStamped & pose,
   double max_robot_pose_search_dist,
+  double segment_switch_proportion,
   bool reject_unit_path)
 {
   if (global_plan_.poses.empty()) {
@@ -101,8 +102,7 @@ nav_msgs::msg::Path PathHandler::transformGlobalPlan(
     Eigen::Vector3d x(x_point.x, x_point.y, x_point.z);
 
     double proportion = (b - a).dot(x - a) / (b - a).squaredNorm();;
-    // TODO: Configurable
-    if (proportion >= 1.0) {
+    if (proportion >= segment_switch_proportion) {
       prev_pose_index_ = pose_index;
     }
   }

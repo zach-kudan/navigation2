@@ -62,6 +62,9 @@ struct Parameters
   bool use_collision_detection;
   double transform_tolerance;
   bool stateful;
+  double slow_down_distance;
+  double slow_down_min_proportion;
+  double segment_switch_proportion;
 };
 
 /**

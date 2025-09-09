@@ -103,6 +103,12 @@ ParameterHandler::ParameterHandler(
     rclcpp::ParameterValue(true));
   declare_parameter_if_not_declared(
       node, plugin_name_ + ".stateful", rclcpp::ParameterValue(true));
+  declare_parameter_if_not_declared(
+      node, plugin_name_ + ".slow_down_distance", rclcpp::ParameterValue(0.5));
+  declare_parameter_if_not_declared(
+      node, plugin_name_ + ".slow_down_min_proportion", rclcpp::ParameterValue(0.0));
+  declare_parameter_if_not_declared(
+      node, plugin_name_ + ".segment_switch_proportion", rclcpp::ParameterValue(1.0));
 
   node->get_parameter(plugin_name_ + ".desired_linear_vel", params_.desired_linear_vel);
   params_.base_desired_linear_vel = params_.desired_linear_vel;
@@ -184,6 +190,20 @@ ParameterHandler::ParameterHandler(
     plugin_name_ + ".use_collision_detection",
     params_.use_collision_detection);
   node->get_parameter(plugin_name_ + ".stateful", params_.stateful);
+
+  node->get_parameter(plugin_name_ + ".slow_down_distance", params_.slow_down_distance);
+  if (params_.slow_down_distance < 0.0) {
+    RCLCPP_WARN(logger_, "slow_down_distance must be positive, resetting to zero");
+    params_.slow_down_distance = 0;
+  }
+
+  node->get_parameter(plugin_name_ + ".slow_down_min_proportion", params_.slow_down_min_proportion);
+  if (params_.slow_down_min_proportion < 0.0 || params_.slow_down_min_proportion > 1.0) {
+    RCLCPP_WARN(logger_, "slow_down_min_proportion must be in the range [0, 1], resetting to zero");
+    params_.slow_down_min_proportion = 0;
+  }
+
+  node->get_parameter(plugin_name_ + ".segment_switch_proportion", params_.segment_switch_proportion);
 
   if (params_.inflation_cost_scaling_factor <= 0.0) {
     RCLCPP_WARN(
